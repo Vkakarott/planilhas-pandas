@@ -1,0 +1,37 @@
+import pandas as pd
+
+def separar_turmas_por_email(base_entrada, turmaA_entrada, turmaB_entrada, turmaC_entrada):
+    df_base = pd.read_csv(base_entrada, encoding='latin1', sep=';', on_bad_lines='skip')
+    
+    print("Colunas da Base: ", df_base.columns)
+
+    df_turmaA = pd.read_csv(turmaA_entrada, encoding='utf-8-sig', sep=',') 
+    df_turmaB = pd.read_csv(turmaB_entrada, encoding='utf-8-sig', sep=',') 
+    df_turmaC = pd.read_csv(turmaC_entrada, encoding='utf-8-sig', sep=',') 
+
+    print("Colunas da Turma A: ", df_turmaA.columns)
+    print("Colunas da Turma B: ", df_turmaB.columns)
+    print("Colunas da Turma C: ", df_turmaC.columns)
+
+    df_turmaA.columns = df_turmaA.columns.str.strip().str.replace('ï»¿', '').str.replace('“', '').str.replace('”', '')
+    df_turmaB.columns = df_turmaB.columns.str.strip().str.replace('ï»¿', '').str.replace('“', '').str.replace('”', '')
+    df_turmaC.columns = df_turmaC.columns.str.strip().str.replace('ï»¿', '').str.replace('“', '').str.replace('”', '')
+    
+    df_turmaA_emails = df_turmaA['Endereço de email'].tolist()
+    df_turmaB_emails = df_turmaB['Endereço de email'].tolist()
+    df_turmaC_emails = df_turmaC['Endereço de email'].tolist()
+
+    df_turmaA_final = df_base[df_base['Endereço de email'].isin(df_turmaA_emails)]
+    df_turmaB_final = df_base[df_base['Endereço de email'].isin(df_turmaB_emails)]
+    df_turmaC_final = df_base[df_base['Endereço de email'].isin(df_turmaC_emails)]
+
+    df_turmaA_final.to_csv("turmaA_filtrada.csv", index=False, sep=';', encoding='latin1')
+    df_turmaB_final.to_csv("turmaB_filtrada.csv", index=False, sep=';', encoding='latin1')
+    df_turmaC_final.to_csv("turmaC_filtrada.csv", index=False, sep=';', encoding='latin1')
+
+arquivo_base = "Base.csv"
+arquivo_turmaA = "turmaA.csv"
+arquivo_turmaB = "turmaB.csv"
+arquivo_turmaC = "turmaC.csv"
+
+separar_turmas_por_email(arquivo_base, arquivo_turmaA, arquivo_turmaB, arquivo_turmaC)
